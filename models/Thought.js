@@ -1,28 +1,27 @@
 const { Schema, model } = require('mongoose');
+const Reaction = require('./Reaction');
 
-const courseSchema = new Schema(
+const thoughtSchema = new Schema(
   {
-    courseName: {
+    thoughtText: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 280,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    username: {
       type: String,
       required: true,
     },
-    inPerson: {
-      type: Boolean,
-      default: true,
-    },
-    startDate: {
-      type: Date,
-      default: Date.now(),
-    },
-    endDate: {
-      type: Date,
-      default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
-    },
-    students: [
+    reactions: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Student',
-      },
+        ref: 'Reaction'
+      }
     ],
   },
   {
@@ -33,6 +32,14 @@ const courseSchema = new Schema(
   }
 );
 
-const Course = model('course', courseSchema);
+userSchema
+  .virtual('reactionsCount')
+  // Getter
+  .get(function () {
+    return this.reactions.length;
+  })
 
-module.exports = Course;
+
+const Thought = model('Thought', thoughtSchema);
+
+module.exports = Thought;
