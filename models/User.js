@@ -19,7 +19,12 @@ const usernameSchema = new Schema(
         message: 'Email validation failed'
       },
     },
-    friends: [{ type: Schema.Types.ObjectId, ref: 'friend' }],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'friend'
+      }
+    ],
     thoughts: [
       {
         type: Schema.Types.ObjectId,
@@ -55,6 +60,6 @@ userSchema
   });
 
 
-const username = model('username', usernameSchema);
+const username = model('Username', usernameSchema);
 
-module.exports = username;
+module.exports = Username;
