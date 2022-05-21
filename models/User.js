@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const assignmentSchema = require('./Assignment');
+const reactionSchema = require('./Reaction');
 
 // Schema to create username model
 const usernameSchema = new Schema(
@@ -19,12 +19,6 @@ const usernameSchema = new Schema(
         message: 'Email validation failed'
       },
     },
-    friends: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'friend'
-      }
-    ],
     thoughts: [
       {
         type: Schema.Types.ObjectId,
@@ -60,6 +54,6 @@ userSchema
   });
 
 
-const username = model('Username', usernameSchema);
+const User = model('User', userSchema);
 
-module.exports = Username;
+module.exports = User;
