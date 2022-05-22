@@ -1,54 +1,31 @@
-const { User, thought } = require('../models');
+const { User, Thought } = require('../models');
 
 
+// // Aggregate function to get the number of Users overall
+// const headCount = async () =>
+//   User.aggregate()
+//     // Your code here
+//     .count("numberOfUsers")
+//     .then((numberOfUsers) => numberOfUsers);
 
-
-
-
-
-
-
-
-// Aggregate function to get the number of Users overall
-const headCount = async () =>
-  User.aggregate()
-    // Your code here
-    .count("numberOfUsers")
-    .then((numberOfUsers) => numberOfUsers);
-
-
-
-
-
-
-
-// A function that executes the aggregate method on the user model and will calculate the overall grade by using the $avg operator
-const grade = async (userId) =>
-  User.aggregate(
-    [
-    {
-      $unwind: '$reactions',
-    },
-    { $group: {
-      // Your code here
-      _id: userId,
-      avg_score: { $avg: '$reactions.score' },
-    },
-    },
-  ]);
-
-
-
-
-
-
-
-
-
-
+// // A function that executes the aggregate method on the user model and will calculate the overall grade by using the $avg operator
+// const grade = async (userId) =>
+//   User.aggregate(
+//     [
+//     {
+//       $unwind: '$reactions',
+//     },
+//     { $group: {
+//       // Your code here
+//       _id: userId,
+//       avg_score: { $avg: '$reactions.score' },
+//     },
+//     },
+//   ]);
 
 
 module.exports = {
+
   // Get all users
   getUsers(req, res) {
     User.find()
@@ -64,6 +41,7 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
+
   // Get a single user
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
@@ -82,20 +60,13 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
+
   // create a new user
   createUser(req, res) {
     User.create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
-
-
-
-
-
-
-
-
 
   // Delete a User and remove them from the thought
   deleteUser(req, res) {
@@ -120,50 +91,5 @@ module.exports = {
         console.log(err);
         res.status(500).json(err);
       });
-  },
-
-
-
-
-
-
-
-
-
-
-  // Add an reaction to a user
-  addReaction(req, res) {
-    console.log('You are adding an reaction');
-    console.log(req.body);
-    User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $addToSet: { reactions: req.body } },
-      { runValidators: true, new: true }
-    )
-      .then((user) =>
-        !user
-          ? res
-              .status(404)
-              .json({ message: 'No user found with that ID :(' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-
-  // Remove reaction from a user
-  removeReaction(req, res) {
-    User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $pull: { reaction: { reactionId: req.params.reactionId } } },
-      { runValidators: true, new: true }
-    )
-      .then((user) =>
-        !user
-          ? res
-              .status(404)
-              .json({ message: 'No user found with that ID :(' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
   },
 };

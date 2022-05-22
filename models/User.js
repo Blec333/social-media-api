@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const reactionSchema = require('./Reaction');
 
 // Schema to create username model
 const userSchema = new Schema(
