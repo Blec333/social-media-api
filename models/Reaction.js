@@ -6,19 +6,20 @@ const reactionSchema = new Schema(
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
-    username: {
-      type: String,
-      required: true,
-    },
-    reactionName: {
+    reactionBody: {
       type: String,
       required: true,
       maxlength: 280,
       default: 'Unnamed reaction',
     },
+    username: {
+      type: String,
+      required: true,
+    },
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a'),
     },
   },
   {

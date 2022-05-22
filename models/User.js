@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction');
 
 // Schema to create username model
-const usernameSchema = new Schema(
+const userSchema = new Schema(
   {
     username: {
       type: String,
@@ -34,7 +34,7 @@ const usernameSchema = new Schema(
   },
   {
     toJSON: {
-      getters: true,
+      // getters: true,
       virtuals: true,
     },
     id: false,//don't return the id of the element(s)
