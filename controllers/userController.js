@@ -116,11 +116,13 @@ module.exports = {
 
 
   // POST /api/users/:userId/friends/:friendId
-  addFriend({ params }, res) {
+  addFriend(req, res) {
+    console.log(req.params)
+    console.log(req.body)
     // add friendId to userId's friend list
     User.findOneAndUpdate(
-      { _id: params.userId },
-      { $addToSet: { friends: params.friendId } },
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.body.friendId } },
       { new: true, runValidators: true }
     )
       .then(dbUserData => {
@@ -129,9 +131,13 @@ module.exports = {
           return;
         }
         // add userId to friendId's friend list
+          console.log('params')
+          console.log(req.params)
+          console.log('body')
+          console.log(req.body)
         User.findOneAndUpdate(
-          { _id: params.friendId },
-          { $addToSet: { friends: params.userId } },
+          { _id: req.body.friendId },
+          { $addToSet: { friends: req.params.userId } },
           { new: true, runValidators: true }
         )
           .then(dbUserData2 => {

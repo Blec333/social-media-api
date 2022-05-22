@@ -88,8 +88,9 @@ module.exports = {
   addReaction(req, res) {
     console.log('You are adding an reaction');
     console.log(req.body);
-    Thought.findOneAndUpdate(
-      { _id: req.params.userId },
+    console.log(req.params)
+    Thought.findByIdAndUpdate(
+      { _id: req.params.thoughtId },
       { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
     )
