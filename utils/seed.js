@@ -59,19 +59,6 @@ for (let i = 0; i < 20; i++) {
 // THOUGHTS ------------------------------------------------------------------------------------
 
 
-
-// Function to generate random reactions that we can add to user object.
-const getRandomReactions = (int) => {
-  const results = [];
-  for (let i = 0; i < int; i++) {
-    results.push({
-      username: getRandomArrItem(users).username,
-      reactionName: getRandomArrItem(appReactions),
-    });
-  }
-  return results;
-};
-
 // Function to generate random thoughts that we can add to user object.
 const getRandomThoughts = (int, passedInUser) => {
   const results = [];
@@ -85,22 +72,43 @@ const getRandomThoughts = (int, passedInUser) => {
   return results;
 };
 
-
-
 // Create empty array to hold the thoughts
 const thoughts = [];
 users.forEach((el) => {
   if (el) {
     const thoughtsToPush = getRandomThoughts(2, el.username);
-    console.log(thoughtsToPush)
     thoughtsToPush.forEach((el) => {
       thoughts.push(el);
     });
-    // thoughts.push(thoughtsToPush);
   }
 });
 
 
+
+// REACTIONS ------------------------------------------------------------------------------------
+
+// Function to generate random reactions that we can add to user object.
+const getRandomReactions = (int) => {
+  const results = [];
+  for (let i = 0; i < int; i++) {
+    results.push({
+      reactionBody: getRandomArrItem(appReactions),
+      username: getRandomArrItem(users).username,
+    });
+  }
+  return results;
+};
+
+// // Create empty array to hold the reactions
+// const reactions = [];
+// thoughts.forEach((el) => {
+//   if (el) {
+//     const reactionsToPush = getRandomReactions(3);
+//     reactionsToPush.forEach((el) => {
+//       reactions.push(el);
+//     });
+//   }
+// });
 
 
 
