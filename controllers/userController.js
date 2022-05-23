@@ -1,14 +1,8 @@
 const { User, Thought } = require('../models');
 
 
-// // Aggregate function to get the number of Users overall
-// const userCount = async () =>
-//   User.aggregate()
-//     // Your code here
-//     .count("numberOfFriends")
-//     .then((numberOfFriends) => numberOfFriends);
 
-// A function that executes the aggregate method on the user model and will calculate the overall friendCount by using the $avg operator
+// A function that executes the aggregate method on the user model and will calculate the friendCount by using the $sum operator
 const friendCount = async (userId) =>
   User.aggregate(
     [
@@ -120,8 +114,8 @@ module.exports = {
       { $addToSet: { friends: req.body.friendId } },
       { new: true, runValidators: true }
     )
-      .then(dbUserData => {
-        if (!dbUserData) {
+      .then(user => {
+        if (!user) {
           res.status(404).json({ message: 'No user found with this userId' });
           return;
         }
@@ -131,12 +125,12 @@ module.exports = {
           { $addToSet: { friends: req.params.userId } },
           { new: true, runValidators: true }
         )
-          .then(dbUserData2 => {
-            if (!dbUserData2) {
+          .then(friend => {
+            if (!friend) {
               res.status(404).json({ message: 'No user found with this friendId' })
               return;
             }
-            res.json(dbUserData);
+            res.json(user);
           })
           .catch(err => res.json(err));
       })
@@ -144,26 +138,26 @@ module.exports = {
   },
 
   // DELETE /api/users/:userId/friends/:friendId
-  deleteFriend({ params }, res) {
+  deleteFriend(req, res) {
     // remove friendId from userId's friend list
     User.findOneAndUpdate(
-      { _id: params.userId },
-      { $pull: { friends: params.friendId } },
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
       { new: true, runValidators: true }
     )
-      .then(dbUserData => {
-        if (!dbUserData) {
+      .then(user => {
+        if (!user) {
           res.status(404).json({ message: 'No user found with this userId' });
           return;
         }
         // remove userId from friendId's friend list
         User.findOneAndUpdate(
-          { _id: params.friendId },
-          { $pull: { friends: params.userId } },
+          { _id: req.params.friendId },
+          { $pull: { friends: req.params.userId } },
           { new: true, runValidators: true }
         )
-          .then(dbUserData2 => {
-            if (!dbUserData2) {
+          .then(friend => {
+            if (!friend) {
               res.status(404).json({ message: 'No user found with this friendId' })
               return;
             }
