@@ -1,25 +1,22 @@
 const { User, Thought } = require('../models');
 
 
-// Aggregate function to get the number of Users overall
-const friendCount = async () =>
-  User.aggregate()
-    // Your code here
-    .count("numberOfUsers")
-    .then((numberOfUsers) => numberOfUsers);
+// // Aggregate function to get the number of Users overall
+// const userCount = async () =>
+//   User.aggregate()
+//     // Your code here
+//     .count("numberOfFriends")
+//     .then((numberOfFriends) => numberOfFriends);
 
-// A function that executes the aggregate method on the user model and will calculate the overall grade by using the $avg operator
-const grade = async (userId) =>
+// A function that executes the aggregate method on the user model and will calculate the overall friendCount by using the $avg operator
+const friendCount = async (userId) =>
   User.aggregate(
     [
       {
-        $unwind: '$reactions',
+        $unwind: '$friends',
       },
       {
-        $group: {
-          // Your code here
-          _id: userId,
-          avg_score: { $avg: '$reactions.score' },
+        $group: { _id: userId, friendCount: { $sum: '$friends' },
         },
       },
     ]);
@@ -33,7 +30,7 @@ module.exports = {
       .then(async (users) => {
         const userObj = {
           users,
-          friendCount: await friendCount(),
+          friendCount: await friendCount(req.params.userId),
         };
         return res.json(userObj);
       })
@@ -53,7 +50,7 @@ module.exports = {
           ? res.status(404).json({ message: 'No user with that ID' })
           : res.json({
             user,
-            grade: await grade(req.params.userId),
+            friendCount: await friendCount(req.params.userId),
           })
       )
       .catch((err) => {
@@ -117,8 +114,6 @@ module.exports = {
 
   // POST /api/users/:userId/friends/:friendId
   addFriend(req, res) {
-    console.log(req.params)
-    console.log(req.body)
     // add friendId to userId's friend list
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -131,10 +126,6 @@ module.exports = {
           return;
         }
         // add userId to friendId's friend list
-          console.log('params')
-          console.log(req.params)
-          console.log('body')
-          console.log(req.body)
         User.findOneAndUpdate(
           { _id: req.body.friendId },
           { $addToSet: { friends: req.params.userId } },

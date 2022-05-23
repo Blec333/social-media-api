@@ -4,7 +4,7 @@ module.exports = {
 
   // Get all thoughts
   getThoughts(req, res) {
-    Thought.find({})
+    Thought.find()
       .populate({ path: 'reactions', select: '-__v' })
       .select('-__v')
       .then((thoughts) =>
@@ -89,17 +89,19 @@ module.exports = {
     console.log('You are adding an reaction');
     console.log(req.body);
     console.log(req.params)
-    Thought.findByIdAndUpdate(
+    Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $addToSet: { reactions: req.body } },
+      { $push: { reactions: req.body } },
       { runValidators: true, new: true }
     )
-      .then((user) =>
+      .then((user) => 
         !user
           ? res.status(404).json({ message: 'No thought found with that ID' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
+          : res.json(user))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).json(err)
+});
   },
 
   // Remove reaction from a thought
