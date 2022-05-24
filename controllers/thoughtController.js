@@ -1,17 +1,5 @@
 const { Thought, User } = require('../models');
 
-// A function that executes the aggregate method on the user model and will calculate the reactionCount by using the $sum operator
-// const reactionCount = async (userId) =>
-//   User.aggregate(
-//     [
-//       {
-//         $unwind: '$reactions',
-//       },
-//       {
-//         $group: { _id: userId, reactionCount: { $sum: '$reactions' },
-//         },
-//       },
-//     ]);
 
 
 module.exports = {
@@ -100,9 +88,6 @@ module.exports = {
 
   // Add an reaction to a thought
   addReaction(req, res) {
-    console.log('You are adding an reaction');
-    console.log(req.body);
-    console.log(req.params)
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $push: { reactions: req.body } },
@@ -120,7 +105,6 @@ module.exports = {
 
   // Remove reaction from a thought
   removeReaction(req, res) {
-    console.log(req.params)
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $pull: { reactions: { reactionId: req.params.reactionId } } },
