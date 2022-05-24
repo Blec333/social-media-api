@@ -9,7 +9,7 @@ This social media api is setup using Mongo DB wrapped by Mongoose.  All necessar
 
 [Click to view the deployed application](https://blec-social-media-api.herokuapp.com/)
 
-[Click to view the portfolio repository](https://github.com/Blec333/social-media-api)
+[Click to view the portfolio repository](https://blec-social-media-api.herokuapp.com/api/users/)
 
 [Click to view the video](https://drive.google.com/file/d/1-hOs36HAfjZ06oN_9rn4DEVwiiVi8LHZ/view?usp=sharing)
 
